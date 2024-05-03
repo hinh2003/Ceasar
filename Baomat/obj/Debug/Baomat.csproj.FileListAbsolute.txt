@@ -1,0 +1,10 @@
+D:\Case\Baomat\Baomat\bin\Debug\Baomat.exe.config
+D:\Case\Baomat\Baomat\bin\Debug\Baomat.exe
+D:\Case\Baomat\Baomat\bin\Debug\Baomat.pdb
+D:\Case\Baomat\Baomat\obj\Debug\Baomat.csproj.AssemblyReference.cache
+D:\Case\Baomat\Baomat\obj\Debug\Baomat.Form1.resources
+D:\Case\Baomat\Baomat\obj\Debug\Baomat.Properties.Resources.resources
+D:\Case\Baomat\Baomat\obj\Debug\Baomat.csproj.GenerateResource.cache
+D:\Case\Baomat\Baomat\obj\Debug\Baomat.csproj.CoreCompileInputs.cache
+D:\Case\Baomat\Baomat\obj\Debug\Baomat.exe
+D:\Case\Baomat\Baomat\obj\Debug\Baomat.pdb
