@@ -34,7 +34,7 @@ namespace Baomat
             }
 
             // Gọi hàm mã hóa Caesar và hiển thị kết quả
-            string encryptedText = CaesarEncrypt(plaintext, key);
+            string encryptedText = CaesarEncryptVietnamese(plaintext, key);
             txtOutput.Text = encryptedText;
         }
 
@@ -68,6 +68,48 @@ namespace Baomat
 
             return result.ToString();
         }
+        private string CaesarEncryptVietnamese(string input, int key)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            key = key % 89; // Đảm bảo khóa nằm trong phạm vi của bảng chữ cái tiếng Việt
+
+            char[] result = new char[input.Length];
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                char ch = input[i];
+                if (char.IsLetter(ch))
+                {
+                    bool isUpper = char.IsUpper(ch);
+                    char baseLetter = isUpper ? 'A' : 'a';
+
+                    // Định vị vị trí của ký tự trong bảng chữ cái tiếng Việt
+                    int indexInVietnameseAlphabet = Array.IndexOf(isUpper ? VietnameseAlphabetUpperCase : VietnameseAlphabetLowerCase, ch);
+
+                    if (indexInVietnameseAlphabet >= 0)
+                    {
+                        int newIndex = (indexInVietnameseAlphabet + key) % 89;
+                        result[i] = isUpper ? VietnameseAlphabetUpperCase[newIndex] : VietnameseAlphabetLowerCase[newIndex];
+                    }
+                    else
+                    {
+                        result[i] = ch; // Ký tự không phải là chữ cái tiếng Việt, giữ nguyên
+                    }
+                }
+                else
+                {
+                    result[i] = ch; // Ký tự không phải là chữ cái, giữ nguyên
+                }
+            }
+
+            return new string(result);
+        }
+
+        private readonly char[] VietnameseAlphabetUpperCase = "AĂÂBCDĐEÊGHIKLMNOÔƠPQRSTUƯVXY".ToCharArray();
+        private readonly char[] VietnameseAlphabetLowerCase = "aăâbcdđeêghiklmnoôơpqrstuưvxy".ToCharArray();
+
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -105,8 +147,16 @@ namespace Baomat
 
         private void button4_Click(object sender, EventArgs e)
         {
-            // Lấy dữ liệu từ TextBox và khóa
-            string encryptedText = txtOutput.Text;
+            string encryptedText;
+            if (string.IsNullOrEmpty(txtOutput.Text))
+            {
+                encryptedText = txtInput.Text;
+
+            }
+            else
+            {
+                encryptedText = txtOutput.Text;
+            }
             if (!int.TryParse(txtKey.Text, out int key))
             {
                 MessageBox.Show("Vui lòng nhập một số nguyên làm khóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -118,35 +168,44 @@ namespace Baomat
             txtDecrypted.Text = decryptedText;
         }
 
-        // Hàm giải mã Caesar
+
         private string CaesarDecrypt(string input, int key)
         {
-            StringBuilder result = new StringBuilder();
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
 
-            foreach (char ch in input)
+            key = key % 89; // Đảm bảo khóa nằm trong phạm vi của bảng chữ cái tiếng Việt
+
+            char[] result = new char[input.Length];
+
+            for (int i = 0; i < input.Length; i++)
             {
+                char ch = input[i];
                 if (char.IsLetter(ch))
                 {
-                    char decryptedChar = (char)(ch - key);
-                    if (char.IsUpper(ch))
+                    bool isUpper = char.IsUpper(ch);
+                    char baseLetter = isUpper ? 'A' : 'a';
+
+                    // Định vị vị trí của ký tự trong bảng chữ cái tiếng Việt
+                    int indexInVietnameseAlphabet = Array.IndexOf(isUpper ? VietnameseAlphabetUpperCase : VietnameseAlphabetLowerCase, ch);
+
+                    if (indexInVietnameseAlphabet >= 0)
                     {
-                        if (decryptedChar < 'A')
-                            decryptedChar = (char)(decryptedChar + 26);
+                        int newIndex = (indexInVietnameseAlphabet - key + 89) % 89; // Trừ đi khóa và thực hiện phép chia lấy dư
+                        result[i] = isUpper ? VietnameseAlphabetUpperCase[newIndex] : VietnameseAlphabetLowerCase[newIndex];
                     }
                     else
                     {
-                        if (decryptedChar < 'a')
-                            decryptedChar = (char)(decryptedChar + 26);
+                        result[i] = ch; // Ký tự không phải là chữ cái tiếng Việt, giữ nguyên
                     }
-                    result.Append(decryptedChar);
                 }
                 else
                 {
-                    result.Append(ch); // Giữ nguyên các ký tự không phải chữ cái
+                    result[i] = ch; // Ký tự không phải là chữ cái, giữ nguyên
                 }
             }
 
-            return result.ToString();
+            return new string(result);
         }
 
         private void button5_Click(object sender, EventArgs e)
